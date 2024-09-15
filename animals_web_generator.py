@@ -41,8 +41,8 @@ def main():
     # Fetch data from the API using data_fetcher
     animals_data = data_fetcher.fetch_data(animal_name)
 
-    # Check if the animal exists in the database
-    if not animals_data or 'error' in animals_data:
+    # Check if the API returned no animals or if the response contains an error
+    if not animals_data or len(animals_data) == 0:
         animal_info_html = f"<h2>The animal \"{animal_name}\" doesn't exist.</h2>"
     else:
         # Generate animal info string in HTML format

@@ -27,16 +27,21 @@ def fetch_data(animal_name):
     }
     response = requests.get(url, headers=headers)
 
-    # Print the response content for debugging
+    # Log the URL being used for debugging purposes
+    print(f"Fetching data from URL: {url}")
     print(f"Response status code: {response.status_code}")
     print(f"Response content: {response.text}")
 
     if response.status_code == 200:
         try:
-            return response.json()
+            data = response.json()
+            if not data:  # Check if the response is an empty list
+                print(f"No data found for animal: {animal_name}")
+                return []
+            return data
         except requests.exceptions.JSONDecodeError:
-            print("Error: Response is not in JSON format")
+            print(f"Error: Could not parse response as JSON for {animal_name}")
             return None
     else:
-        print(f"Error: {response.status_code}")
+        print(f"Error: Received status code {response.status_code}")
         return None
