@@ -1,25 +1,18 @@
 import requests
+import os
+from dotenv import load_dotenv
 
-API_KEY = '8REHXrpS0bS+aJxyG9BlPQ==ddtNcRZXuVqHHxvk'
+# Load environment variables from .env file
+load_dotenv()
+
+# Retrieve API key from environment variable
+API_KEY = os.getenv('API_KEY')
 BASE_URL = 'https://api.api-ninjas.com/v1/animals'
-
 
 def fetch_data(animal_name):
     """
     Fetches the animals data for the animal 'animal_name'.
-    Returns: a list of animals, each animal is a dictionary:
-    {
-        'name': ...,
-        'taxonomy': {
-            ...
-        },
-        'locations': [
-            ...
-        ],
-        'characteristics': {
-            ...
-        }
-    },
+    Returns: a list of animals, each animal is a dictionary.
     """
     url = f"{BASE_URL}?name={animal_name}"
     headers = {
@@ -27,21 +20,13 @@ def fetch_data(animal_name):
     }
     response = requests.get(url, headers=headers)
 
-    # Log the URL being used for debugging purposes
-    print(f"Fetching data from URL: {url}")
-    print(f"Response status code: {response.status_code}")
-    print(f"Response content: {response.text}")
-
     if response.status_code == 200:
         try:
             data = response.json()
-            if not data:  # Check if the response is an empty list
-                print(f"No data found for animal: {animal_name}")
+            if not data:
                 return []
             return data
         except requests.exceptions.JSONDecodeError:
-            print(f"Error: Could not parse response as JSON for {animal_name}")
             return None
     else:
-        print(f"Error: Received status code {response.status_code}")
         return None
